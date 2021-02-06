@@ -91,11 +91,15 @@ def add(request):
 
 # ----------Search View---------
 def search(request):
-    saerch = request.GET.get('search')
-    print(saerch)
-    img = image.objects.filter(img_title__icontains=saerch)
-    imgdec = image.objects.filter(img_desc__icontains=saerch)
-    # img1_user = image.objects.filter(image_user__icontains=saerch) 
-    query = img.union(imgdec)
-    context = {'query':query}
+    if request.user.is_authenticated:
+
+        saerch = request.GET.get('search')
+        print(saerch)
+        img = image.objects.filter(img_title__icontains=saerch)
+        imgdec = image.objects.filter(img_desc__icontains=saerch)
+        # img1_user = image.objects.filter(image_user__icontains=saerch) 
+        query = img.union(imgdec)
+        context = {'query':query}
+    else:
+        return redirect('/')
     return render(request,'search.html',context)
