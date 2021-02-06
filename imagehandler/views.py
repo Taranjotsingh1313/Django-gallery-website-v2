@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import HttpResponse
 from django.contrib.auth import login,logout
 from django.contrib.auth import authenticate
+from .models import image
 # Create your views here.
 
 # ***************DashBoard View******************
@@ -12,7 +13,8 @@ def imageshow(request):
         # messages.error(request,'Please Login First')
         return redirect('login/')
     else:
-        return render(request,'index.html',{})
+        images = image.objects.all()
+        return render(request,'index.html',{'images':images})
 
 # *****************Signing Up User***************
 def signup(request):
@@ -63,5 +65,37 @@ def login1(request):
 
 # ------------Logout----
 def logout1(request):
-    logout(request)
-    return redirect('/')
+    if request.user.is_authenticated:
+        logout(request)
+        return redirect('/')
+    else:
+        return redirect('/')
+# -----------add------
+def add(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            imagetitle = request.POST['imagetitle']
+            desc = request.POST['imagedesc']
+            image2 = request.FILES['image1']
+            if imagetitle  and desc and image2:
+                image3 = image(img_title=imagetitle,img_desc=desc,image_file=image2,img_user=request.user)
+                image3.save()
+                messages.success(request,'Image Uploaded Successfully')
+                return redirect('/add')
+            else:
+                return HttpResponse('No Fiels')
+    else:
+        return redirect('/')
+    return render(request,'add.html',{})
+
+
+# ----------Search View---------
+def search(request):
+    saerch = request.GET.get('search')
+    print(saerch)
+    img = image.objects.filter(img_title__icontains=saerch)
+    imgdec = image.objects.filter(img_desc__icontains=saerch)
+    # img1_user = image.objects.filter(image_user__icontains=saerch) 
+    query = img.union(imgdec)
+    context = {'query':query}
+    return render(request,'search.html',context)

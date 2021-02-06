@@ -82,22 +82,24 @@ figure.effect-ming img{
             </div>
         </div>
         <div class="row tm-mb-90 tm-gallery">
-            {% if images %}
-            {% for img in images%}
+            {% if query %}
+            {% for q in query%}
         		<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5">
                 <figure class="effect-ming tm-video-item">
-                    <img src="{{img.image_file.url}}" alt="Image" class="img-fluid">
+                    <img src="{{q.image_file.url}}" alt="Image" class="img-fluid">
                     <figcaption class="d-flex align-items-center justify-content-center">
-                        <h2>BY: {{img.img_user.username}}</h2>
+                        <h2>BY: {{q.img_user.username}}</h2>
                         <!--<a href="photo-detail.html">View more</a>-->
                     </figcaption>                    
                 </figure>
                 <div class="d-flex justify-content-between tm-text-gray">
-                    <span class="tm-text-gray-light">{{img.img_title}}</span>
+                    <span class="tm-text-gray-light">{{q.img_title}}</span>
                     <span>9,906 views</span>
                 </div>
             </div>
                 {%endfor%}
+                {%else%}
+                <h2>No Results Found</h2>
                 {%endif%}
             </div>
             
