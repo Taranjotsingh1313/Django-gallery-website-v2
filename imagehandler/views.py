@@ -9,10 +9,6 @@ from .models import image
 
 # ***************DashBoard View******************
 def imageshow(request):
-    if not request.user.is_authenticated:
-        # messages.error(request,'Please Login First')
-        return redirect('login/')
-    else:
         images = image.objects.all()
         return render(request,'index.html',{'images':images})
 
